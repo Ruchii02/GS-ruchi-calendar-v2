@@ -6,7 +6,7 @@ import { Provider } from 'react-redux';
 import {store} from '../redux/store';
 
 type Props = {
-  children: React.ReactNode; // Explicitly type the children prop
+  children: React.ReactNode; 
 };
 
 export default function RootLayout({ children }: Props) {
