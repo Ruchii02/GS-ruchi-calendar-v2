@@ -1,0 +1,36 @@
+export const calendar_data = [
+    {
+      id: "user1",
+      exerciseName: "Bicep & Tricep",
+      trainerName: "Raj",
+      startTime: "13:12",
+      endTime: "14:12",
+      period: "PM",
+      customerName: "John",
+      currentDate: "2024-07-08T05:42:09.599Z",
+      userPicture: "/default-user-1.jpg",
+    },
+    {
+      id: "user2",
+      exerciseName: "Pullups",
+      trainerName: "David",
+      startTime: "04:15",
+      endTime: "07:15",
+      period: "PM",
+      customerName: "Raj",
+      currentDate: "2024-07-17T05:42:50.207Z",
+      userPicture: "/default-user-2.jpg",
+    },
+    {
+      id: "user3",
+      exerciseName: "Stretching",
+      trainerName: "Kane",
+      startTime: "15:22",
+      endTime: "16:22",
+      period: "PM",
+      customerName: "Raj",
+      currentDate: "2024-07-22T05:45:42.272Z",
+      userPicture: "/default-user-3.jpg",
+    },
+  ];
+  
