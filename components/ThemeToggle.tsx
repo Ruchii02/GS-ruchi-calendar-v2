@@ -1,29 +1,50 @@
 "use client";
-import React from 'react';
-import { SunIcon, MoonIcon } from '@heroicons/react/24/solid'; // Import icons
 
-const ThemeToggle: React.FC = () => {
-  const [isDarkMode, setDarkMode] = React.useState(false);
+import * as React from "react";
+import { useEffect, useState } from "react";
+import { useTheme } from "next-themes";
+import { MoonIcon, SunIcon } from "@radix-ui/react-icons";
 
-  const toggleDarkMode = () => {
-    document.documentElement.classList.toggle('dark');
-    setDarkMode(!isDarkMode);
-  };
+import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+
+export function ThemeToggle() {
+  const [mounted, setMounted] = useState(false);
+
+  const { theme, setTheme } = useTheme();
+  useEffect(() => {
+    setMounted(true);
+  }, [theme]);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return null;
+  }
 
   return (
-    <div className="flex justify-end p-4">
-      <button 
-        onClick={toggleDarkMode} 
-        className="p-2 bg-gray-200 dark:bg-gray-700 flex items-center justify-center rounded"
-      >
-        {isDarkMode ? (
-          <SunIcon className="h-6 w-6 text-yellow-500" /> 
-        ) : (
-          <MoonIcon className="h-6 w-6 text-gray-800" /> 
-        )}
-      </button>
-    </div>
+    <TooltipProvider disableHoverableContent>
+      <Tooltip delayDuration={100}>
+        <TooltipTrigger asChild>
+          <Button
+            className="rounded-full w-12 h-12 bg-background z-20"
+            variant="outline"
+            size="icon"
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+          >
+            <SunIcon className="w-[1.6rem] h-[1.6rem] rotate-90 scale-0 transition-transform ease-in-out duration-500 dark:rotate-0 dark:scale-100 z-20" />
+            <MoonIcon className="absolute w-[1.6rem] h-[1.6rem] rotate-0 scale-1000 transition-transform ease-in-out duration-500 dark:-rotate-90 dark:scale-0 z-20" />
+            <span className="sr-only">Switch Theme</span>
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent side="bottom">Switch Theme</TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   );
-};
-
-export default ThemeToggle;
+}

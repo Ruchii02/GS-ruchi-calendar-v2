@@ -1,22 +1,22 @@
 "use client";
-import ThemeToggle from '../components/ThemeToggle';
-import './globals.css';
-import React from 'react';
-import { Provider } from 'react-redux';
-import {store} from '../redux/store';
+import "./globals.css";
+import React from "react";
+import { ReduxProvider } from "@/app/providers/redux-provider";
+import { ThemeProvider } from "@/app/providers/theme-provider";
 
 type Props = {
-  children: React.ReactNode; 
+  children: React.ReactNode;
 };
 
 export default function RootLayout({ children }: Props) {
   return (
     <html lang="en">
-      <body className="bg-white dark:bg-gray-900">
-        <ThemeToggle />
-        <Provider store={store}>
-          {children}
-        </Provider>
+      <body>
+        <ReduxProvider>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            {children}
+          </ThemeProvider>
+        </ReduxProvider>
       </body>
     </html>
   );

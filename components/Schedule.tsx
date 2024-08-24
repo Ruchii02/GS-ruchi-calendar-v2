@@ -1,11 +1,23 @@
-import React, { useState } from 'react';
-import { Calendar, momentLocalizer, SlotInfo, EventProps, EventPropGetter, ToolbarProps } from 'react-big-calendar';
-import moment from 'moment';
-import 'react-big-calendar/lib/css/react-big-calendar.css';
-import { useAppDispatch, useAppSelector } from '../redux/hooks';
-import { addEvent, updateEvent, deleteEvent, CalendarEvent } from '../redux/calendarSlice';
-import FormModal from './FormModal';
-import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
+import React, { useState } from "react";
+import {
+  Calendar,
+  EventPropGetter,
+  EventProps,
+  momentLocalizer,
+  SlotInfo,
+  ToolbarProps,
+} from "react-big-calendar";
+import moment from "moment";
+import "react-big-calendar/lib/css/react-big-calendar.css";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import {
+  addEvent,
+  CalendarEvent,
+  deleteEvent,
+  updateEvent,
+} from "../redux/calendarSlice";
+import FormModal from "./FormModal";
+import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 
 const localizer = momentLocalizer(moment);
 
@@ -17,21 +29,28 @@ const EmptyHeader: React.FC<ToolbarProps<object>> = () => {
   return <div className="rbc-toolbar" />;
 };
 
-const ConfirmationDialog: React.FC<{ onConfirm: () => void; onCancel: () => void; }> = ({ onConfirm, onCancel }) => {
+const ConfirmationDialog: React.FC<{
+  onConfirm: () => void;
+  onCancel: () => void;
+}> = ({ onConfirm, onCancel }) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black z-50 bg-opacity-100">
       <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full opacity-100">
-        <h2 className="text-lg font-semibold mb-4 text-gray-900">Delete Event</h2>
-        <p className="text-gray-700 mb-4">Are you sure you want to delete this event?</p>
+        <h2 className="text-lg font-semibold mb-4 text-stone-900">
+          Delete Event
+        </h2>
+        <p className="text-stone-700 mb-4">
+          Are you sure you want to delete this event?
+        </p>
         <div className="flex justify-between">
-          <button 
-            onClick={onCancel} 
-            className="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
+          <button
+            onClick={onCancel}
+            className="px-4 py-2 bg-stone-300 text-stone-700 rounded hover:bg-stone-400"
           >
             Cancel
           </button>
-          <button 
-            onClick={onConfirm} 
+          <button
+            onClick={onConfirm}
             className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
           >
             Delete Event
@@ -43,7 +62,9 @@ const ConfirmationDialog: React.FC<{ onConfirm: () => void; onCancel: () => void
 };
 
 export default function Schedule() {
-  const events = useAppSelector((state: { calendar: { events: CalendarEvent[] } }) => state.calendar.events);
+  const events = useAppSelector(
+    (state: { calendar: { events: CalendarEvent[] } }) => state.calendar.events,
+  );
   const dispatch = useAppDispatch();
 
   const [showModal, setShowModal] = useState(false);
@@ -51,7 +72,7 @@ export default function Schedule() {
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
- 
+
   const handleSelectSlot = (slotInfo: SlotInfo) => {
     setSelectedSlot(slotInfo);
     setShowModal(true);
@@ -68,7 +89,7 @@ export default function Schedule() {
         period: formData.period,
         customerName: formData.customerName,
         currentDate: new Date().toISOString(),
-        userPicture: formData.userPicture || '',
+        userPicture: formData.userPicture || "",
       };
       dispatch(addEvent(newEvent));
     }
@@ -120,21 +141,28 @@ export default function Schedule() {
     return (
       <div className="p-2 rounded-lg text-white relative">
         <div className="font-bold">{event.exerciseName}</div>
-        <div>{event.start.toLocaleTimeString()}-{event.end.toLocaleTimeString()} {event.period}</div>
+        <div>
+          {event.start.toLocaleTimeString()}-{event.end.toLocaleTimeString()}{" "}
+          {event.period}
+        </div>
         <div>{event.trainerName}(trainer)</div>
         <div className="flex items-center mt-2">
-          <img src={event.userPicture || 'default-user.png'} alt="user" className="w-6 h-6 rounded-full mr-2" />
+          <img
+            src={event.userPicture || "default-user.png"}
+            alt="user"
+            className="w-6 h-6 rounded-full mr-2"
+          />
           <span>{event.customerName}</span>
         </div>
         {confirmDelete === event.id && (
-          <ConfirmationDialog 
-            onConfirm={handleDeleteConfirm} 
-            onCancel={handleDeleteCancel} 
+          <ConfirmationDialog
+            onConfirm={handleDeleteConfirm}
+            onCancel={handleDeleteCancel}
           />
         )}
         {!confirmDelete && (
-          <button 
-            onClick={handleDeleteClick} 
+          <button
+            onClick={handleDeleteClick}
             className="absolute top-0 right-0 p-1 bg-red-500 text-white rounded-full"
           >
             x
@@ -147,13 +175,13 @@ export default function Schedule() {
   const eventStyleGetter: EventPropGetter<object> = (event) => {
     const calendarEvent = event as CalendarEvent;
     const style = {
-      backgroundColor: '#7b2cbf',
-      borderRadius: '5px',
+      backgroundColor: "#7b2cbf",
+      borderRadius: "5px",
       opacity: 0.9,
-      color: 'white',
-      display: 'block',
-      padding: '10px',
-      minHeight:'50px'
+      color: "white",
+      display: "block",
+      padding: "10px",
+      minHeight: "50px",
     };
     return { style };
   };
@@ -165,7 +193,7 @@ export default function Schedule() {
   }
 
   const toDate = (value: Date | string): Date => {
-    return typeof value === 'string' ? new Date(value) : value;
+    return typeof value === "string" ? new Date(value) : value;
   };
 
   const handleEventResize = ({ event, start, end }: EventInteractionArgs) => {
@@ -187,23 +215,30 @@ export default function Schedule() {
     };
     dispatch(updateEvent(updatedEvent));
   };
- 
 
   return (
-    <div className="dark:bg-gray-800 p-4">
+    <div className="bg-stone-200 dark:bg-stone-800 p-4 m-2 rounded-lg">
       <h1 className="text-lg mb-4">Workout Schedule</h1>
-      
+
       {/* Year and Month Selectors with Buttons */}
       <div className="flex items-center space-x-4 mb-4">
         <div className="flex items-center space-x-2">
-          <select value={selectedYear} onChange={handleYearChange} className="border p-2 rounded">
-            {getYearOptions().map(year => (
+          <select
+            value={selectedYear}
+            onChange={handleYearChange}
+            className="border p-2 rounded"
+          >
+            {getYearOptions().map((year) => (
               <option key={year} value={year}>
                 {year}
               </option>
             ))}
           </select>
-          <select value={selectedMonth} onChange={handleMonthChange} className="border p-2 rounded">
+          <select
+            value={selectedMonth}
+            onChange={handleMonthChange}
+            className="border p-2 rounded"
+          >
             {months.map((month, index) => (
               <option key={index} value={index}>
                 {month}
@@ -234,13 +269,16 @@ export default function Schedule() {
         onEventResize={handleEventResize}
         onEventDrop={handleEventDrop}
         resizable
-        draggableAccessor={() => true} 
+        draggableAccessor={() => true}
       />
-      
 
       {/* Form Modal */}
       {showModal && (
-        <FormModal isOpen={showModal} onSubmit={handleFormSubmit} onClose={handleCloseModal} />
+        <FormModal
+          isOpen={showModal}
+          onSubmit={handleFormSubmit}
+          onClose={handleCloseModal}
+        />
       )}
     </div>
   );
