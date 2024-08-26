@@ -1,3 +1,4 @@
+https://gs-ruchi-calendar-v2.netlify.app/schedule
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
