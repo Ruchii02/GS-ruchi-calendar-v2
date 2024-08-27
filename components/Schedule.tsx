@@ -183,28 +183,27 @@ export default function Schedule() {
     return { style };
   };
 
-  const handleEventResize = ({ event, start, end }: { event: CalendarEvent; start: Date; end: Date }) => {
-    const updatedEvent = {
-      ...event,
-      start: new Date(start),
-      end: new Date(end),
-    };
-    dispatch(updateEvent(updatedEvent));
-  };
+  // const handleEventResize = ({ event, start, end }: { event: CalendarEvent; start: Date; end: Date }) => {
+  //   const updatedEvent = {
+  //     ...event,
+  //     start: new Date(start),
+  //     end: new Date(end),
+  //   };
+  //   dispatch(updateEvent(updatedEvent));
+  // };
 
-  const handleEventDrop = ({ event, start, end }: { event: CalendarEvent; start: Date; end: Date }) => {
-    const updatedEvent = {
-      ...event,
-      start: new Date(start),
-      end: new Date(end),
-    };
-    dispatch(updateEvent(updatedEvent));
-  };
+  // const handleEventDrop = ({ event, start, end }: { event: CalendarEvent; start: Date; end: Date }) => {
+  //   const updatedEvent = {
+  //     ...event,
+  //     start: new Date(start),
+  //     end: new Date(end),
+  //   };
+  //   dispatch(updateEvent(updatedEvent));
+  // };
 
   const toDate = (value: Date | string): Date => {
     return typeof value === "string" ? new Date(value) : value;
   };
-  
   
   const handleYearButtonClick = () => {
     setViewMode('year');
@@ -286,8 +285,8 @@ export default function Schedule() {
             toolbar: EmptyHeader,
           }}
           eventPropGetter={eventStyleGetter}
-          onEventResize={handleEventResize}
-          onEventDrop={handleEventDrop}
+          //onEventResize={handleEventResize}
+         // onEventDrop={handleEventDrop}
           resizable
           draggableAccessor={() => true}
         />
