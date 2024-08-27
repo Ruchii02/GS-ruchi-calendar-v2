@@ -20,9 +20,7 @@ import FormModal from "./FormModal";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 
 const localizer = momentLocalizer(moment);
-
 const months = moment.months();
-
 const DragAndDropCalendar = withDragAndDrop(Calendar);
 
 const EmptyHeader: React.FC<ToolbarProps<object>> = () => {
@@ -36,9 +34,7 @@ const ConfirmationDialog: React.FC<{
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black z-50 bg-opacity-100">
       <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full opacity-100">
-        <h2 className="text-lg font-semibold mb-4 text-stone-900">
-          Delete Event
-        </h2>
+        <h2 className="text-lg font-semibold mb-4 text-stone-900">Delete Event</h2>
         <p className="text-stone-700 mb-4">
           Are you sure you want to delete this event?
         </p>
@@ -72,6 +68,7 @@ export default function Schedule() {
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<'month' | 'year'>('month');
 
   const handleSelectSlot = (slotInfo: SlotInfo) => {
     setSelectedSlot(slotInfo);
@@ -186,34 +183,40 @@ export default function Schedule() {
     return { style };
   };
 
-  interface EventInteractionArgs {
-    event: any;
-    start: Date | string;
-    end: Date | string;
-  }
+  const handleEventResize = ({ event, start, end }: { event: CalendarEvent; start: Date; end: Date }) => {
+    const updatedEvent = {
+      ...event,
+      start: new Date(start),
+      end: new Date(end),
+    };
+    dispatch(updateEvent(updatedEvent));
+  };
+
+  const handleEventDrop = ({ event, start, end }: { event: CalendarEvent; start: Date; end: Date }) => {
+    const updatedEvent = {
+      ...event,
+      start: new Date(start),
+      end: new Date(end),
+    };
+    dispatch(updateEvent(updatedEvent));
+  };
 
   const toDate = (value: Date | string): Date => {
     return typeof value === "string" ? new Date(value) : value;
   };
-
-  const handleEventResize = ({ event, start, end }: EventInteractionArgs) => {
-    const calendarEvent = event as CalendarEvent;
-    const updatedEvent = {
-      ...calendarEvent,
-      start: toDate(start),
-      end: toDate(end),
-    };
-    dispatch(updateEvent(updatedEvent));
+  
+  
+  const handleYearButtonClick = () => {
+    setViewMode('year');
   };
 
-  const handleEventDrop = ({ event, start, end }: EventInteractionArgs) => {
-    const calendarEvent = event as CalendarEvent;
-    const updatedEvent = {
-      ...calendarEvent,
-      start: toDate(start),
-      end: toDate(end),
-    };
-    dispatch(updateEvent(updatedEvent));
+  const handleMonthButtonClick = () => {
+    setViewMode('month');
+  };
+
+  const handleMonthClick = (monthIndex: number) => {
+    setSelectedMonth(monthIndex);
+    setViewMode('month');
   };
 
   return (
@@ -246,31 +249,49 @@ export default function Schedule() {
             ))}
           </select>
         </div>
-        <button className="border p-2 rounded ml-2">Year</button>
-        <button className="border p-2 rounded ml-2">Month</button>
+        <button className="border p-2 rounded ml-2" onClick={handleYearButtonClick}>
+          Year
+        </button>
+        <button className="border p-2 rounded ml-2" onClick={handleMonthButtonClick}>
+          Month
+        </button>
       </div>
 
-      {/* Calendar */}
-      <DragAndDropCalendar
-        localizer={localizer}
-        events={events}
-        startAccessor={(event) => (event as CalendarEvent).start}
-        endAccessor={(event) => (event as CalendarEvent).end}
-        style={{ height: 500 }}
-        selectable
-        onSelectSlot={handleSelectSlot}
-        defaultView="month"
-        date={startOfMonth}
-        components={{
-          event: eventRenderer,
-          toolbar: EmptyHeader,
-        }}
-        eventPropGetter={eventStyleGetter}
-        onEventResize={handleEventResize}
-        onEventDrop={handleEventDrop}
-        resizable
-        draggableAccessor={() => true}
-      />
+      {/* Month Grid for Year View */}
+      {viewMode === 'year' ? (
+        <div className="grid grid-cols-4 gap-4">
+          {months.map((month, index) => (
+            <div
+              key={index}
+              className="p-4 h-36 bg-stone-400 text-white rounded-lg cursor-pointer"
+              onClick={() => handleMonthClick(index)}
+            >
+              {month}
+            </div>
+          ))}
+        </div>
+      ) : (
+        <DragAndDropCalendar
+          localizer={localizer}
+          events={events}
+          startAccessor={(event) => (event as CalendarEvent).start}
+          endAccessor={(event) => (event as CalendarEvent).end}
+          style={{ height: 500 }}
+          selectable
+          onSelectSlot={handleSelectSlot}
+          defaultView="month"
+          date={startOfMonth}
+          components={{
+            event: eventRenderer,
+            toolbar: EmptyHeader,
+          }}
+          eventPropGetter={eventStyleGetter}
+          onEventResize={handleEventResize}
+          onEventDrop={handleEventDrop}
+          resizable
+          draggableAccessor={() => true}
+        />
+      )}
 
       {/* Form Modal */}
       {showModal && (
@@ -283,3 +304,4 @@ export default function Schedule() {
     </div>
   );
 }
+
